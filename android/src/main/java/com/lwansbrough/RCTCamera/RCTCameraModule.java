@@ -232,7 +232,7 @@ public class RCTCameraModule extends ReactContextBaseJavaModule
         mCamera.unlock();  // make available for mediarecorder
 
         // Set AV sources
-        mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+        // mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 
         mMediaRecorder.setOrientationHint(RCTCamera.getInstance().getAdjustedDeviceOrientation());
