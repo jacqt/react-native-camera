@@ -26,6 +26,7 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.PlanarYUVLuminanceSource;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 
 class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceTextureListener, Camera.PreviewCallback {
     private int _cameraType;
@@ -39,6 +40,7 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
 
     // reader instance for the barcode scanner
     private final MultiFormatReader _multiFormatReader = new MultiFormatReader();
+    private final QRCodeReader _qrCodeReader = new QRCodeReader();
 
     public RCTCameraViewFinder(Context context, int type) {
         super(context);
@@ -288,9 +290,10 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
             }
 
             try {
-                PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, 0, 0, width / 2, height / 2, false);
+                PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, width / 4, height / 4, (width * 3) / 4, (height * 3 ) /4, false);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
-                Result result = _multiFormatReader.decodeWithState(bitmap);
+                // Result result = _multiFormatReader.decodeWithState(bitmap);
+                Result result = _qrCodeReader.decode(bitmap);
 
                 ReactContext reactContext = RCTCameraModule.getReactContextSingleton();
                 WritableMap event = Arguments.createMap();
