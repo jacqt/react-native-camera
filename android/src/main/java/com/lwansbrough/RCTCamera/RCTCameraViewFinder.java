@@ -270,27 +270,15 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
             if (isCancelled()) {
                 return null;
             }
+            android.util.Log.v("ReactNativeJS", "Starting to decode an image");
 
             Camera.Size size = camera.getParameters().getPreviewSize();
 
             int width = size.width;
             int height = size.height;
 
-            // rotate for zxing if orientation is portrait
-            if (RCTCamera.getInstance().getActualDeviceOrientation() == 0) {
-              byte[] rotated = new byte[imageData.length];
-              for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                  rotated[x * height + height - y - 1] = imageData[x + y * width];
-                }
-              }
-              width = size.height;
-              height = size.width;
-              imageData = rotated;
-            }
-
             try {
-                PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, width / 4, height / 4, (width * 3) / 4, (height * 3 ) /4, false);
+                PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, width / 4, height / 4, width / 2, height / 2, false);
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                 // Result result = _multiFormatReader.decodeWithState(bitmap);
                 Result result = _qrCodeReader.decode(bitmap);
@@ -304,8 +292,9 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
             } catch (Throwable t) {
                 // meh
             } finally {
-                _multiFormatReader.reset();
+                _qrCodeReader.reset();
                 RCTCameraViewFinder.barcodeScannerTaskLock = false;
+                android.util.Log.v("ReactNativeJS", "Finished attempt to decode image");
                 return null;
             }
         }
