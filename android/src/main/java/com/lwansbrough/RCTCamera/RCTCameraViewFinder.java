@@ -278,7 +278,9 @@ class RCTCameraViewFinder extends TextureView implements TextureView.SurfaceText
             int height = size.height;
 
             try {
-                PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, width / 4, height / 4, width / 2, height / 2, false);
+                // PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, width / 4, height / 4, width / 2, height / 2, false);
+                PlanarYUVLuminanceSource source = new PlanarYUVLuminanceSource(imageData, width, height, 0, 0, width, height, false);
+
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                 // Result result = _multiFormatReader.decodeWithState(bitmap);
                 Result result = _qrCodeReader.decode(bitmap);
